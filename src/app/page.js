@@ -2,12 +2,12 @@ import Navbar from "@/components/Navbar";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-white">
       <Navbar />
 
       <main className="mx-auto max-w-7xl px-6 py-16">
         <div className="text-center">
-          <h1 className="text-5xl font-bold text-gray-900">
+          <h1 className="text-5xl font-bold text-slate-900 dark:text-white">
             Weather Dashboard
           </h1>
 
