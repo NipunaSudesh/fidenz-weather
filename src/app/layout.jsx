@@ -1,16 +1,18 @@
 import "./globals.css";
 import { StateContextProvider } from "@/Context";
-import { ThemeProvider } from "@/Context/ThemeContext";
+
+export const metadata = {
+  title: "Fidenz Weather",
+  description: "Weather analytics application",
+};
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <ThemeProvider>
-          <StateContextProvider>
-            {children}
-          </StateContextProvider>
-        </ThemeProvider>
+        <StateContextProvider>
+          {children}
+        </StateContextProvider>
       </body>
     </html>
   );
