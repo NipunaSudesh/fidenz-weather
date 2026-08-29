@@ -13,6 +13,9 @@ import {
 } from "lucide-react";
 import { useTheme } from "../Context/ThemeContext";
 import { useStateContext } from "@/Context";
+import Image from "next/image";
+
+
 
 export default function Navbar() {
   const [input, setInput] = useState("");
@@ -61,7 +64,15 @@ export default function Navbar() {
           href="/"
           className="text-lg font-semibold tracking-tight text-slate-900 dark:text-white"
         >
-          Fidenz Weather
+         <Link href="/" className="flex items-center">
+  <Image
+      src={dark ? "/logo-dark.png" : "/logo.png"}
+    alt="Nexa Weather"
+    width={150}
+    height={45}
+    priority
+  />
+</Link>
         </Link>
 
         {/* Search */}
