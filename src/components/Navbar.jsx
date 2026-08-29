@@ -11,16 +11,17 @@ import {
   LogOut,
   ChevronDown,
 } from "lucide-react";
-
+import { useTheme } from "../Context/ThemeContext";
 import { useStateContext } from "@/Context";
 
 export default function Navbar() {
   const [input, setInput] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
-
+  const { weather, place, setPlace } = useStateContext();
+  const { dark, toggleTheme } = useTheme();
   const menuRef = useRef(null);
 
-  const { place, setPlace } = useStateContext();
+  // const { place, setPlace } = useStateContext();
 
   // Close profile menu when clicking outside
   useEffect(() => {
@@ -52,22 +53,22 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
+  <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur transition-colors duration-300 dark:border-slate-800 dark:bg-slate-950/90">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
 
         {/* Logo */}
         <Link
           href="/"
-          className="text-lg font-semibold tracking-tight text-slate-900"
+          className="text-lg font-semibold tracking-tight text-slate-900 dark:text-white"
         >
           Fidenz Weather
         </Link>
 
         {/* Search */}
-        <div className="hidden w-80 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 md:flex">
+        <div className="hidden w-80 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 md:flex dark:bg-slate-800">
           <CiSearch
             size={24}
-            className="cursor-pointer text-slate-500"
+            className="cursor-pointer text-slate-500 dark:text-slate-300"
             onClick={submitCity}
           />
 
@@ -81,7 +82,7 @@ export default function Navbar() {
                 submitCity();
               }
             }}
-            className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
+            className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500"
           />
         </div>
 
@@ -89,14 +90,18 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
 
           {/* Dark mode placeholder */}
-          <button
-            type="button"
-            aria-label="Toggle dark mode"
-            className="rounded-full p-2 text-slate-600 hover:bg-slate-100"
-          >
-            <Moon size={19} />
-          </button>
-
+  <button
+          type="button"
+          onClick={toggleTheme}
+          aria-label="Toggle dark mode"
+          className="rounded-full bg-white p-3 text-gray-700 shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+        >
+          {dark ? (
+            <Sun size={22} />
+          ) : (
+            <Moon size={22} />
+          )}
+        </button>
           {/* Profile */}
           <div
             className="relative"
@@ -105,7 +110,7 @@ export default function Navbar() {
             <button
               type="button"
               onClick={() => setMenuOpen((value) => !value)}
-              className="flex items-center gap-2 rounded-full border border-slate-200 px-2 py-1.5 text-sm hover:bg-slate-100"
+              className="flex items-center gap-2 rounded-full border border-slate-200 px-2 py-1.5 text-sm hover:bg-gray-100 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
             >
               {/* Avatar */}
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">
@@ -113,7 +118,7 @@ export default function Navbar() {
               </span>
 
               {/* Username */}
-              <span className="hidden sm:inline text-slate-700">
+              <span className="hidden sm:inline text-slate-700  dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
                 User
               </span>
 
@@ -127,16 +132,17 @@ export default function Navbar() {
 
             {/* Dropdown */}
             {menuOpen && (
-              <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
+              <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg dark:bg-slate-900 dark:border-slate-700">
 
                 {/* User information */}
                 <div className="border-b border-slate-100 px-4 py-3">
-                  <p className="text-sm font-semibold text-slate-900">
+                  <p className="text-sm font-semibold text-slate-900 dark:text-white">
                     User
                   </p>
 
                   {place && (
-                    <p className="mt-1 truncate text-xs text-slate-500">
+                    <p className="mt-1 truncate text-xs text-slate-500 dark:text-slate-400">
+
                       Current city: {place}
                     </p>
                   )}
@@ -146,7 +152,7 @@ export default function Navbar() {
                 <Link
                   href="/profile"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                  className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-100  dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
                 >
                   <User size={15} />
                   Profile
@@ -159,7 +165,7 @@ export default function Navbar() {
                     setMenuOpen(false);
                     console.log("Logout clicked");
                   }}
-                  className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-red-600 hover:bg-slate-100"
+                  className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-red-600 hover:bg-slate-100 dark:hover:bg-slate-800"
                 >
                   <LogOut size={15} />
                   Log out
@@ -172,7 +178,7 @@ export default function Navbar() {
       </div>
 
       {/* Mobile search */}
-      <div className="mx-4 mb-3 flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 md:hidden">
+      <div className="mx-4 mb-3 flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 md:hidden dark:bg-slate-800">
         <CiSearch
           size={24}
           className="cursor-pointer text-slate-500"
@@ -189,10 +195,9 @@ export default function Navbar() {
               submitCity();
             }
           }}
-          className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
+          className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500"
         />
       </div>
     </nav>
   );
 }
-
