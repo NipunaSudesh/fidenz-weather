@@ -24,7 +24,7 @@ export default function WeatherCard({ city }) {
   const localDateTime = getLocalDateTime(city.timestamp, city.timezone);
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white/60 p-5 shadow-md transition-all duration-300 hover:shadow-lg dark:border-slate-700 dark:bg-slate-900">
+    <div className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-yellow-100 p-5 shadow-md dark:from-slate-900 dark:to-slate-900 dark:border-slate-700">
       {/* Header: icon + city + temp */}
       <div className="flex items-center justify-between gap-3">
         <div className="relative h-16 w-16 shrink-0">
