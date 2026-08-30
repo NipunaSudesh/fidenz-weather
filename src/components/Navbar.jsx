@@ -59,21 +59,15 @@ export default function Navbar() {
   <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur transition-colors duration-300 dark:border-slate-800 dark:bg-slate-950/90">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
 
-        {/* Logo */}
-        <Link
-          href="/"
-          className="text-lg font-semibold tracking-tight text-slate-900 dark:text-white"
-        >
-         <Link href="/" className="flex items-center">
+<Link href="/" className="flex items-center">
   <Image
-      src={dark ? "/logo-dark.png" : "/logo.png"}
+    src={dark ? "/logo-dark.png" : "/logo.png"}
     alt="Nexa Weather"
     width={150}
     height={45}
     priority
   />
 </Link>
-        </Link>
 
         {/* Search */}
         <div className="hidden w-80 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 md:flex dark:bg-slate-800">
