@@ -164,17 +164,13 @@ export default function Navbar() {
                 </Link>
 
                 {/* Logout */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    console.log("Logout clicked");
-                  }}
+                <Link
+                  href="/auth/logout"
                   className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-red-600 hover:bg-slate-100 dark:hover:bg-slate-800"
                 >
                   <LogOut size={15} />
                   Log out
-                </button>
+                </Link>
 
               </div>
             )}
