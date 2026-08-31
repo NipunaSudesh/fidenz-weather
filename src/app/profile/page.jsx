@@ -64,8 +64,8 @@ export default async function ProfilePage() {
               href="/dashboard"
               className="rounded-lg bg-slate-700 px-5 py-2.5 font-semibold hover:bg-slate-600"
             >
-              Home
-            </Link >
+            Dashboard
+                        </Link >
 
             <Link
               href="/auth/logout"
