@@ -19,7 +19,7 @@ export async function GET() {
         id: city.CityCode,
         name: city.CityName,
       }))
-      .slice(0, 10);
+      .slice(0, 15);
 
     const results = await Promise.all(
       cityCodes.map(async (city) => {
@@ -40,9 +40,20 @@ export async function GET() {
 
           const response = await fetch(url);
 
-          if (!response.ok) {
-            throw new Error(`OpenWeather API error: ${response.status}`);
-          }
+if (!response.ok) {
+  const errorData = await response.json().catch(() => ({}));
+
+  console.error("OpenWeather error:", {
+    city: city.name,
+    cityCode: city.id,
+    status: response.status,
+    error: errorData,
+  });
+
+  throw new Error(
+    `OpenWeather API error for ${city.name} (${city.id}): ${response.status}`
+  );
+}
 
           data = await response.json();
 
