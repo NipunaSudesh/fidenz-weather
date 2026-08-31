@@ -1,4 +1,5 @@
 import cities from "@/data/cities.json";
+import { calculateComfortIndex } from "@/lib/comfortIndex";
 
 export async function GET() {
   try {
@@ -27,6 +28,12 @@ console.log(response);
         }
 
         const data = await response.json();
+             const comfortScore = calculateComfortIndex({
+          temperature: data.main.temp,
+          humidity: data.main.humidity,
+          windSpeed: data.wind.speed,
+          cloudiness: data.clouds.all,
+        });
 
         return {
           cityCode: city.id,
@@ -47,11 +54,22 @@ console.log(response);
           icon: data.weather[0].icon,
              timezone: data.timezone,
            timestamp: data.dt,
+           comfortScore: comfortScore,
         };
       })
     );
 
-    return Response.json(results);
+results.sort((a, b) => b.comfortScore - a.comfortScore);
+
+//add ranking
+    const rankedResults = results.map((city, index) => ({
+      ...city,
+      rank: index + 1,
+    }));
+
+return Response.json(rankedResults);
+
+
   } catch (error) {
     console.error(error);
 
