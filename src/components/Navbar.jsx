@@ -56,24 +56,18 @@ export default function Navbar() {
   };
 
   return (
-  <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur transition-colors duration-300 dark:border-slate-800 dark:bg-slate-950/90">
+  <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur transition-colors duration-300 dark:border-slate-800 dark:bg-slate-950/90 shadow-stone-400">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
 
-        {/* Logo */}
-        <Link
-          href="/"
-          className="text-lg font-semibold tracking-tight text-slate-900 dark:text-white"
-        >
-         <Link href="/" className="flex items-center">
+<Link href="/" className="flex items-center">
   <Image
-      src={dark ? "/logo-dark.png" : "/logo.png"}
+    src={dark ? "/logo-dark.png" : "/logo.png"}
     alt="Nexa Weather"
     width={150}
     height={45}
     priority
   />
 </Link>
-        </Link>
 
         {/* Search */}
         <div className="hidden w-80 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 md:flex dark:bg-slate-800">
@@ -170,17 +164,13 @@ export default function Navbar() {
                 </Link>
 
                 {/* Logout */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMenuOpen(false);
-                    console.log("Logout clicked");
-                  }}
+                <Link
+                  href="/auth/logout"
                   className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-red-600 hover:bg-slate-100 dark:hover:bg-slate-800"
                 >
                   <LogOut size={15} />
                   Log out
-                </button>
+                </Link>
 
               </div>
             )}
