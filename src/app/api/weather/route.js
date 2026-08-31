@@ -45,6 +45,8 @@ console.log(response);
           weather: data.weather[0].main,
           description: data.weather[0].description,
           icon: data.weather[0].icon,
+             timezone: data.timezone,
+           timestamp: data.dt,
         };
       })
     );
