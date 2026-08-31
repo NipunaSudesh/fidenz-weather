@@ -70,7 +70,7 @@ export default function Navbar() {
 </Link>
 
         {/* Search */}
-        <div className="hidden w-80 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 md:flex dark:bg-slate-800">
+        {/* <div className="hidden w-80 items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 md:flex dark:bg-slate-800">
           <CiSearch
             size={24}
             className="cursor-pointer text-slate-500 dark:text-slate-300"
@@ -89,7 +89,7 @@ export default function Navbar() {
             }}
             className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500"
           />
-        </div>
+        </div> */}
 
         {/* Right side */}
         <div className="flex items-center gap-3">
@@ -179,7 +179,7 @@ export default function Navbar() {
       </div>
 
       {/* Mobile search */}
-      <div className="mx-4 mb-3 flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 md:hidden dark:bg-slate-800">
+      {/* <div className="mx-4 mb-3 flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 md:hidden dark:bg-slate-800">
         <CiSearch
           size={24}
           className="cursor-pointer text-slate-500"
@@ -198,7 +198,7 @@ export default function Navbar() {
           }}
           className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500"
         />
-      </div>
+      </div> */}
     </nav>
   );
 }
