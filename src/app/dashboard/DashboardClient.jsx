@@ -38,21 +38,6 @@ useEffect(()=>{
     <div className="min-h-screen bg-slate-200 text-slate-900 transition-colors duration-300 dark:bg-slate-950 dark:text-white">
       <Navbar />
       <main className="mx-auto max-w-7xl px-6 py-16">
-  {/* <div className="flex gap-3">
-        <Link
-          href="/signin"
-          className="rounded-lg bg-gray-200 px-4 py-2 text-gray-800 hover:bg-gray-300"
-        >
-          Sign In 
-        </Link>
-
-        <Link
-          href="/signup"
-          className="rounded-lg bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-        >
-          Sign Up
-        </Link>
-      </div> */}
         {loading ? (
           <p>Loading...</p>
         ) : error ? (
