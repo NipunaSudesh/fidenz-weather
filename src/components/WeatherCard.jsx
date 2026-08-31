@@ -23,10 +23,26 @@ export default function WeatherCard({ city }) {
 
   const localDateTime = getLocalDateTime(city.timestamp, city.timezone);
 
+
+    const getComfortColor = (score) => {
+    if (score >= 70) return "bg-green-600";
+    if (score >= 50) return "bg-amber-500";
+    if (score >= 25) return "bg-orange-600";
+    return "bg-red-600";
+  };
+
   return (
     <div className="rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-50 to-yellow-100 p-5 shadow-md dark:from-slate-900 dark:to-slate-900 dark:border-slate-700">
       {/* Header: icon + city + temp */}
-      <div className="flex items-center justify-between gap-3">
+<div className="flex items-center justify-between gap-3">
+  <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+    City Rank
+  </h2>
+  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-blue-700 to-blue-900 text-sm font-bold text-white shadow-md ring-2 ring-white dark:from-blue-500 dark:to-blue-700 dark:ring-slate-800">
+    {city.rank}
+  </div>
+</div>
+      <div className="flex items-center justify-between gap-3 mt-2">
         <div className="relative h-16 w-16 shrink-0">
           <Image
             src={getWeatherImage()}
@@ -77,6 +93,18 @@ export default function WeatherCard({ city }) {
         {city.description}
       </p>
 
+      <div className="mt-3 flex items-center justify-center gap-2 rounded-xl bg-slate-100 py-2 dark:bg-slate-800">
+        <span className="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">
+          Comfort Score
+        </span>
+        <span
+          className={`rounded-full px-3 py-0.5 text-sm font-bold text-white ${getComfortColor(
+            city.comfortScore
+          )}`}
+        >
+          {city.comfortScore}/100
+        </span>
+      </div>
       {/* Detail grid */}
       <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
         <Stat label="Humidity" value={`${city.humidity}%`} color="bg-blue-600" />
