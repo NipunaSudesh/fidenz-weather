@@ -1,8 +1,19 @@
 import cities from "@/data/cities.json";
 import { calculateComfortIndex } from "@/lib/comfortIndex";
+import { getCache, setCache, CACHE_TTL } from "@/lib/cache";
 
 export async function GET() {
   try {
+    // 1. Check cache for the fully processed + ranked output first
+    const processedCacheKey = "processed-weather-output";
+    const processedCache = getCache(processedCacheKey);
+
+    if (processedCache.hit) {
+      return Response.json(processedCache.data, {
+        headers: { "X-Cache-Status": "HIT" },
+      });
+    }
+
     const cityCodes = cities.List
       .map((city) => ({
         id: city.CityCode,
@@ -12,23 +23,34 @@ export async function GET() {
 
     const results = await Promise.all(
       cityCodes.map(async (city) => {
-        const url =
-          `https://api.openweathermap.org/data/2.5/weather` +
-          `?id=${city.id}` +
-          `&appid=${process.env.OPENWEATHER_API_KEY}` +
-          `&units=metric`;
+        const cacheKey = `raw-weather-${city.id}`;
 
-        const response = await fetch(url);
-console.log(response);
+        // 2. Check cache for this city's raw API response
+        const cached = getCache(cacheKey);
+        let data;
 
-        if (!response.ok) {
-          throw new Error(
-            `OpenWeather API error: ${response.status}`
-          );
+        if (cached.hit) {
+          data = cached.data;
+        } else {
+          const url =
+            `https://api.openweathermap.org/data/2.5/weather` +
+            `?id=${city.id}` +
+            `&appid=${process.env.OPENWEATHER_API_KEY}` +
+            `&units=metric`;
+
+          const response = await fetch(url);
+
+          if (!response.ok) {
+            throw new Error(`OpenWeather API error: ${response.status}`);
+          }
+
+          data = await response.json();
+
+          // Store raw response in cache for 5 minutes
+          setCache(cacheKey, data, CACHE_TTL.RAW_WEATHER);
         }
 
-        const data = await response.json();
-             const comfortScore = calculateComfortIndex({
+        const comfortScore = calculateComfortIndex({
           temperature: data.main.temp,
           humidity: data.main.humidity,
           windSpeed: data.wind.speed,
@@ -39,47 +61,40 @@ console.log(response);
           cityCode: city.id,
           city: data.name,
           country: data.sys.country,
-
           temperature: data.main.temp,
           humidity: data.main.humidity,
-
           windSpeed: data.wind.speed,
           pressure: data.main.pressure,
-
           cloudiness: data.clouds.all,
           visibility: data.visibility,
-
           weather: data.weather[0].main,
           description: data.weather[0].description,
           icon: data.weather[0].icon,
-             timezone: data.timezone,
-           timestamp: data.dt,
-           comfortScore: comfortScore,
+          timezone: data.timezone,
+          timestamp: data.dt,
+          comfortScore,
         };
       })
     );
 
-results.sort((a, b) => b.comfortScore - a.comfortScore);
+    results.sort((a, b) => b.comfortScore - a.comfortScore);
 
-//add ranking
     const rankedResults = results.map((city, index) => ({
       ...city,
       rank: index + 1,
     }));
 
-return Response.json(rankedResults);
+    // 3. Cache the final processed + ranked output separately
+    setCache(processedCacheKey, rankedResults, CACHE_TTL.PROCESSED_OUTPUT);
 
-
+    return Response.json(rankedResults, {
+      headers: { "X-Cache-Status": "MISS" },
+    });
   } catch (error) {
     console.error(error);
-
     return Response.json(
-      {
-        error: "Failed to fetch weather data",
-      },
-      {
-        status: 500,
-      }
+      { error: "Failed to fetch weather data" },
+      { status: 500 }
     );
   }
 }
