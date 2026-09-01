@@ -31,7 +31,6 @@ APP_BASE_URL=http://localhost:3000
 
 Replace the placeholder values with the appropriate API and Auth0 credentials.
 
-**Important:** Do not commit `.env.local` to GitHub. Environment variables containing API keys and secrets should remain private.
 
 ### 4. Start the Development Server
 
