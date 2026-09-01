@@ -5,12 +5,14 @@ import Navbar from "@/components/Navbar";
 import WeatherCard from "@/components/WeatherCard";
 import { useEffect, useState } from "react";
 import Footer from "@/components/Footer";
-
+import TemperatureChart from "@/components/TemperatureChart";
 export default function Dashboard() {
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+const [selectedCity, setSelectedCity] = useState("");
+const [forecast, setForecast] = useState([]);
+const [forecastLoading, setForecastLoading] = useState(false);
   const [sortBy, setSortBy] = useState("comfort");
   const [filter, setFilter] = useState("all");
 
@@ -36,6 +38,36 @@ export default function Dashboard() {
   useEffect(() => {
     fetchWeatherData();
   }, []);
+
+const fetchForecast = async (cityCode) => {
+  if (!cityCode) return;
+
+  try {
+    setForecastLoading(true);
+
+    const res = await fetch(`/api/forecast?cityCode=${cityCode}`);
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch forecast");
+    }
+
+    const data = await res.json();
+
+    const formattedData = data.forecast.map((item) => ({
+      time: new Date(item.time).toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      temperature: item.temperature,
+    }));
+
+    setForecast(formattedData);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setForecastLoading(false);
+  }
+};
 
   // Filter and sort cities
  const processedCities = [...cities]
@@ -103,7 +135,82 @@ export default function Dashboard() {
             across cities.
           </p>
         </div>
+{/* Temperature Trend */}
+<div className="mb-8 rounded-xl border border-slate-300 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-900">
 
+  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+    <div>
+      <h2 className="text-lg font-semibold">
+        Temperature Trend
+      </h2>
+
+      <p className="text-sm text-slate-500 dark:text-slate-400">
+        Select a city to view its forecast
+      </p>
+    </div>
+
+    <div className="flex flex-col gap-2 sm:flex-row">
+
+      {/* City Select */}
+      <select
+        value={selectedCity}
+        onChange={(e) => {
+          const cityCode = e.target.value;
+
+          setSelectedCity(cityCode);
+          fetchForecast(cityCode);
+        }}
+        className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-slate-900 outline-none focus:ring-2 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white"
+      >
+        <option value="">
+          Select a city
+        </option>
+
+        {cities.map((city) => (
+          <option
+            key={city.cityCode}
+            value={city.cityCode}
+          >
+            {city.city}
+          </option>
+        ))}
+      </select>
+
+      {/* Cancel Button */}
+      {selectedCity && (
+        <button
+          type="button"
+          onClick={() => {
+            setSelectedCity("");
+            setForecast([]);
+          }}
+          className="rounded-lg bg-slate-200 px-4 py-2 font-medium text-slate-700 transition hover:bg-slate-300 dark:bg-slate-700 dark:text-white dark:hover:bg-slate-600"
+        >
+          Cancel
+        </button>
+      )}
+
+    </div>
+
+  </div>
+
+</div>
+
+{/* Temperature Chart */}
+{selectedCity && (
+  <div className="mb-10">
+
+    {forecastLoading ? (
+      <p className="py-10 text-center">
+        Loading temperature forecast...
+      </p>
+    ) : (
+      <TemperatureChart data={forecast} />
+    )}
+
+  </div>
+)}
         {/* Sort & Filter */}
         {!loading && !error && (
           <div className="mb-8 flex flex-col gap-4 rounded-xl border border-slate-300 bg-white p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-slate-700 dark:bg-slate-900">
