@@ -38,14 +38,15 @@ const [forecastLoading, setForecastLoading] = useState(false);
   useEffect(() => {
     fetchWeatherData();
   }, []);
-
 const fetchForecast = async (cityCode) => {
   if (!cityCode) return;
 
   try {
     setForecastLoading(true);
 
-    const res = await fetch(`/api/forecast?cityCode=${cityCode}`);
+    const res = await fetch(
+      `/api/forecast?cityCode=${cityCode}`
+    );
 
     if (!res.ok) {
       throw new Error("Failed to fetch forecast");
@@ -53,22 +54,48 @@ const fetchForecast = async (cityCode) => {
 
     const data = await res.json();
 
-    const formattedData = data.forecast.map((item) => ({
-      time: new Date(item.time).toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      temperature: item.temperature,
-    }));
+    const today = new Date();
+
+    const startOfToday = new Date(today);
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const endOfToday = new Date(today);
+    endOfToday.setHours(23, 59, 59, 999);
+
+    const formattedData = data.forecast
+      .filter((item) => {
+        const forecastDate = new Date(item.time);
+
+        return (
+          forecastDate >= startOfToday &&
+          forecastDate <= endOfToday
+        );
+      })
+      .map((item) => {
+        const date = new Date(item.time);
+
+        return {
+          time: date.toLocaleString("en-US", {
+            weekday: "short",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+          }),
+
+          temperature: Number(
+            item.temperature.toFixed(1)
+          ),
+        };
+      });
 
     setForecast(formattedData);
+
   } catch (error) {
     console.error(error);
   } finally {
     setForecastLoading(false);
   }
 };
-
   // Filter and sort cities
  const processedCities = [...cities]
   .filter((city) => {
